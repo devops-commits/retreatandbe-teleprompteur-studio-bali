@@ -12,8 +12,13 @@
 #readingBand{position:absolute;left:0;right:0;top:calc(34.45% - 118px);height:236px;background:linear-gradient(90deg,rgba(193,154,91,0),rgba(193,154,91,.065) 18%,rgba(193,154,91,.065) 82%,rgba(193,154,91,0))}
 #readline{position:absolute;left:60px;right:60px;top:34.45%;border-top:2px solid rgba(193,154,91,.55)}
 #scroll{position:absolute;left:0;right:0;top:0;padding:34.45vh max(11.45vw,80px) 62vh;will-change:transform}
-.block{border-left:5px solid transparent;padding-left:28px;margin-bottom:44px;opacity:.46;transition:opacity .15s,border-color .15s}
-.block.active{opacity:1;border-left-color:var(--gold)}
+.block{border-left:5px solid transparent;padding-left:28px;margin-bottom:44px;opacity:1;transition:border-color .15s}
+.block .spoken{color:#758197;opacity:.52;transition:color .15s,opacity .15s,text-shadow .15s}
+.block.past .spoken{color:#59657A;opacity:.34}
+.block.future .spoken{color:#758197;opacity:.52}
+.block.active{border-left-color:var(--gold)}
+.block.active .spoken{color:#FFF9EC;opacity:1;text-shadow:0 0 18px rgba(255,249,236,.16)}
+.block.active .cue{color:#D9B978;opacity:1}
 .cue{font-size:calc(var(--fs)*.50);line-height:1.25;color:var(--gold2);font-weight:700;font-style:italic;margin-bottom:14px}
 .cue:before{content:"▸ "}
 .spoken{font-size:var(--fs);line-height:1.5;font-weight:600;white-space:pre-line;text-wrap:pretty}
@@ -87,8 +92,8 @@ function apply(){
   scroll.style.transform='translateY('+(-y)+'px)';
   const readAt=window.innerHeight*.345;
   let active=blocks[0],best=Infinity;
-  blocks.forEach(el=>{const d=Math.abs((el.offsetTop-y)-readAt);el.classList.remove('active');if(d<best){best=d;active=el}});
-  if(active){active.classList.add('active');const s=PROMPT.sections[Number(active.dataset.section)];sectionLabel.textContent='· '+s.label}
+  blocks.forEach(el=>{const d=Math.abs((el.offsetTop-y)-readAt);el.classList.remove('active','past','future');if(d<best){best=d;active=el}});
+  if(active){const activeIndex=blocks.indexOf(active);blocks.forEach((el,index)=>el.classList.add(index<activeIndex?'past':index>activeIndex?'future':'active'));const s=PROMPT.sections[Number(active.dataset.section)];sectionLabel.textContent='· '+s.label}
   document.getElementById('progressFill').style.width=(Math.min(1,elapsed/total)*100)+'%';
   document.getElementById('time').innerHTML=mmssClient(elapsed)+' <span>/ '+mmssClient(total)+'</span>';
   document.getElementById('lead').classList.toggle('show',elapsed<LEAD);
