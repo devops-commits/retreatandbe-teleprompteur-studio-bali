@@ -46,7 +46,7 @@
   <div id="topFade"></div><div id="bottomFade"></div>
   <div id="hudTop">
     <div id="identity"><span class="code">VSL · 8 PHASES</span><span class="title">5 clés · Retreat Studio ou Mastermind Bali</span><span class="section" id="section"></span></div>
-    <div id="time">0:00 <span>/ 13:56</span></div>
+    <div id="time">0:00 <span>/ 13:44</span></div>
   </div>
   <div id="hudBottom"><div id="progress"><div id="progressFill"></div></div><div id="controls">
     <span>Retreat & Be · horizontal · <span class="key">repères or = ne pas lire</span></span>
@@ -92,10 +92,10 @@ function apply(){
   scroll.style.transform='translateY('+(-y)+'px)';
   const readAt=window.innerHeight*.345;
   let active=blocks[0],best=Infinity;
-  blocks.forEach(el=>{const d=Math.abs((el.offsetTop-y)-readAt);if(d<best){best=d;active=el}});
+  blocks.forEach(el=>{const top=el.offsetTop-y,bottom=top+el.offsetHeight;const d=readAt<top?top-readAt:readAt>bottom?readAt-bottom:0;if(d<best){best=d;active=el}});
   if(active){const activeIndex=blocks.indexOf(active);blocks.forEach((el,index)=>{el.classList.toggle('past',index<activeIndex);el.classList.toggle('future',index>activeIndex);el.classList.toggle('active',index===activeIndex)});const s=PROMPT.sections[Number(active.dataset.section)];sectionLabel.textContent='· '+s.label}
-  document.getElementById('progressFill').style.width=(Math.min(1,elapsed/total)*100)+'%';
-  document.getElementById('time').innerHTML=mmssClient(elapsed)+' <span>/ '+mmssClient(total)+'</span>';
+  document.getElementById('progressFill').style.width=(Math.min(1,speaking/totalSpoken)*100)+'%';
+  document.getElementById('time').innerHTML=mmssClient(speaking)+' <span>/ '+mmssClient(totalSpoken)+'</span>';
   document.getElementById('lead').classList.toggle('show',elapsed<LEAD);
   document.getElementById('tail').classList.toggle('show',elapsed>=LEAD+totalSpoken);
   const left=LEAD-elapsed;document.getElementById('count').textContent=left>3.2?'PRÊT':left<=.4?'GO':String(Math.ceil(left));
