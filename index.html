@@ -92,8 +92,8 @@ function apply(){
   scroll.style.transform='translateY('+(-y)+'px)';
   const readAt=window.innerHeight*.345;
   let active=blocks[0],best=Infinity;
-  blocks.forEach(el=>{const d=Math.abs((el.offsetTop-y)-readAt);el.classList.remove('active','past','future');if(d<best){best=d;active=el}});
-  if(active){const activeIndex=blocks.indexOf(active);blocks.forEach((el,index)=>el.classList.add(index<activeIndex?'past':index>activeIndex?'future':'active'));const s=PROMPT.sections[Number(active.dataset.section)];sectionLabel.textContent='· '+s.label}
+  blocks.forEach(el=>{const d=Math.abs((el.offsetTop-y)-readAt);if(d<best){best=d;active=el}});
+  if(active){const activeIndex=blocks.indexOf(active);blocks.forEach((el,index)=>{el.classList.toggle('past',index<activeIndex);el.classList.toggle('future',index>activeIndex);el.classList.toggle('active',index===activeIndex)});const s=PROMPT.sections[Number(active.dataset.section)];sectionLabel.textContent='· '+s.label}
   document.getElementById('progressFill').style.width=(Math.min(1,elapsed/total)*100)+'%';
   document.getElementById('time').innerHTML=mmssClient(elapsed)+' <span>/ '+mmssClient(total)+'</span>';
   document.getElementById('lead').classList.toggle('show',elapsed<LEAD);
